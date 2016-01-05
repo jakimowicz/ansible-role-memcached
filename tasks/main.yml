@@ -1,0 +1,18 @@
+---
+
+- name: install memcached
+  homebrew: name={{ item }} state=latest
+  with_items:
+    - memcached
+
+- name: install launchagents
+  file: src=/usr/local/opt/memcached/homebrew.mxcl.memcached.plist path=~/Library/LaunchAgents/homebrew.mxcl.memcached.plist state=link force=yes
+
+- name: check if memcached is loaded
+  shell: launchctl list
+  changed_when: False
+  register: memcached_loaded_result
+
+- name: launch memcached
+  shell: launchctl load ~/Library/LaunchAgents/homebrew.mxcl.memcached.plist
+  when: "'homebrew.mxcl.memcached' not in memcached_loaded_result.stdout"
