@@ -6,10 +6,10 @@
     - memcached
 
 - name: check if memcached is loaded
-  shell: brew services list | grep memcached | grep started
+  shell: brew services list | grep memcached
   changed_when: False
   register: memcached_loaded_result
 
 - name: launch memcached
   shell: brew services start memcached
-  when: "'memcached' not in memcached_loaded_result.stdout"
+  when: "'started' not in memcached_loaded_result.stdout"
